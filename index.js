@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
+const createAccount = require('./save_user');
+const pool = require('./connect_db.js');
 
 const app = express();
 const port = 3000;
@@ -8,8 +9,8 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-app.listen(port, () => {
+app.use(createAccount);
+
+app.listen(port, async () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
 });
-
-
