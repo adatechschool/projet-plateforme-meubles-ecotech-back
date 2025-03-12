@@ -6,14 +6,6 @@ const pool = require('./connect_db.js');
 const app = express();
 const port = 3000;
 
-// Connexion à la db
-const pool = new Pool({
-    connectionString: "postgresql://neondb_owner:npg_0hDFSg7QmuCn@ep-gentle-shape-a98o7km5-pooler.gwc.azure.neon.tech/neondb?sslmode=require",
-    ssl: {
-        rejectUnauthorized: false
-    },
-});
-
 // Route test pour savoir si les requêtes vers la db sont fonctionnel
 app.get('/test', async (req, res) => {
     try{
@@ -26,7 +18,6 @@ app.get('/test', async (req, res) => {
     }
     
 })
-
 
 app.use(cors());
 app.use(express.json());
