@@ -19,6 +19,17 @@ app.get('/test', async (req, res) => {
     
 })
 
+app.get('/login', async (req, res) => {
+    try{
+        const connexion = await pool.query('SELECT email, password FROM user');
+        console.log(connexion.rows)
+        res.json(connexion.rows)
+    } catch(e){
+        console.error('Erreur lors de la connexion', e.message)
+        res.status(500).json({error: 'Erreur lors de la connexion'})
+    }
+})
+
 app.use(cors());
 app.use(express.json());
 
