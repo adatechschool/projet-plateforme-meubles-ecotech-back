@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
 const createAccount = require('./save_user');
 const pool = require('./connect_db.js');
 
@@ -18,6 +19,31 @@ app.get('/test', async (req, res) => {
     }
     
 })
+// Route connexion user
+app.get('/login', async (req, res) => {
+    try {
+        //const { email, password } = req.body;
+        const email = "raissa@gmail.com"
+        const mdp = "azerty"
+        const findUser = 'SELECT email, password FROM "user" WHERE email= $1 ';
+        const { rows } = await pool.query(findUser,[email]);
+        if (rows.length === 0) {
+            return res.send("Utilisateur non trouvé");
+        }
+        const user = rows[0];
+        console.log(user.password)
+
+        const validPassword = await bcrypt.compare(mdp, user.password);
+        if (!validPassword) {
+           return res.send("Mot de passe incorrect");
+        }
+        res.send("Connexion réussie");
+    } catch (e) {
+        console.error('Erreur serveur interne', e.message);
+        res.status(500).json({error: 'Erreur interne du serveur'})
+    }
+});
+
 
 app.use(cors());
 app.use(express.json());
