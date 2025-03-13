@@ -1,10 +1,12 @@
+// Lorsque vous récupérer ce code, n'oubliez pas de npm install dans votre terminal pour récuperer tous les modules installer ci dessous.
 const express = require('express');
 const cors = require('cors');
 const createAccount = require('./save_user');
 const pool = require('./connect_db.js');
+require('dotenv').config(); // J'importe DOTENV pour pourvoir créer des variable d'environement 
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 // Route test pour savoir si les requêtes vers la db sont fonctionnel
 app.get('/test', async (req, res) => {
