@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const createAccount = require('./save_user');
 const pool = require('./connect_db.js');
-require('dotenv').config(); // J'importe DOTENV pour pourvoir créer des variable d'environement 
+require('dotenv').config(); // J'importe DOTENV pour pourvoir créer des variable d'environement
 
 const app = express();
 const port = process.env.PORT;
