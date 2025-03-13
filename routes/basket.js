@@ -15,4 +15,13 @@ router.get('/basket/:id', async (req, res) => {
     }
 });
 
+router.post('/basket/id', async (req, res) => {
+    try{
+        
+    } catch (e){
+        console.error(`Erreur lors de l'ajout`,e.message )
+        res.status(500).json({error : `Erreur lors de l'ajout` })
+    }
+})
+
 module.exports = router
