@@ -15,13 +15,10 @@ router.get('/basket/:id', async (req, res) => {
     }
 });
 
-router.get('/basket/:id/add', async(req, res)=>{
+router.post('/basket/:id/add', async(req, res)=>{
     try{
         const basketId = req.params.id;
-        //const { product_id, quantity, price} = req.body;
-        const product_id = 38;
-        const quantity = 1;
-        const price = 12;
+        const { product_id, quantity, price} = req.body;
         const existItem = await pool.query(
             `SELECT * FROM basket_item WHERE basket_id = $1 AND product_id = $2`,
             [basketId, product_id]
