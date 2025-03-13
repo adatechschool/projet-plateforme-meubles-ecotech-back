@@ -15,4 +15,34 @@ router.get('/basket/:id', async (req, res) => {
     }
 });
 
+router.get('/basket/:id/add', async(req, res)=>{
+    try{
+        const basketId = req.params.id;
+        //const { product_id, quantity, price} = req.body;
+        const product_id = 38;
+        const quantity = 1;
+        const price = 12;
+        const existItem = await pool.query(
+            `SELECT * FROM basket_item WHERE basket_id = $1 AND product_id = $2`,
+            [basketId, product_id]
+        );
+        if(existItem.rows.length>0){
+            await pool.query(
+                `UPDATE basket_item SET quantity = quantity + $1 WHERE basket_id = $2 AND product_id = $3`,
+                [quantity, basketId, product_id]
+            );
+    }else{
+        await pool.query(
+            `INSERT INTO basket_item (product_id, basket_id, quantity, price) VALUES ($1, $2, $3, $4)`,
+            [product_id, basketId, quantity, price]
+        );
+    }
+    res.json({ message: 'Produit ajouté au panier' });
+}catch(e){
+    console.error('Erreur serveur interne', e.message);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
+}
+});
+
+
 module.exports = router
