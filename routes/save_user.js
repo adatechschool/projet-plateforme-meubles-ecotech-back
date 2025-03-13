@@ -31,5 +31,27 @@ router.post('/create-account', async (req, res) => {
     await pool.query('INSERT INTO "user" (fullname, email, "password") VALUES ($1, $2, $3) RETURNING *', [fullname, email, new_password]);
 });
 
+// Route connexion user
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const findUser = 'SELECT email, password FROM "user" WHERE email= $1 ';
+        const { rows } = await pool.query(findUser,[email]);
+        if (rows.length === 0) {
+            return res.send("Utilisateur non trouvé");
+        }
+        const user = rows[0];
+
+        const validPassword = await bcrypt.compare(mdp, user.password);
+        if (!validPassword) {
+           return res.send("Mot de passe incorrect");
+        }
+        res.send("Connexion réussie");
+    } catch (e) {
+        console.error('Erreur serveur interne', e.message);
+        res.status(500).json({error: 'Erreur interne du serveur'})
+    }
+});
+
 module.exports = hashedPassword;
 module.exports = router;
