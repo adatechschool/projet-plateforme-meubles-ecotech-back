@@ -4,7 +4,7 @@ import pool from '../connect_db.js';
 const router = express.Router();
 
 //chiffré le mot de passe dans la base de donnée
-async function hashedPassword(password) {
+const hashedPassword = async (password) => {
     try {
         //généré un sel aléatoire (sel permet de chiffré d'une certaine manière le mot de passe)
         const salt = await bcrypt.genSalt();
@@ -28,25 +28,37 @@ router.post('/create-account', async (req, res) => {
     res.json({ message: "Data received successfully!", receivedData: req.body });
 
     //ajout dans la base de donnée
-    await pool.query('INSERT INTO "user" (fullname, email, "password") VALUES ($1, $2, $3) RETURNING *', [fullname, email, new_password]);
+    await pool.query('INSERT INTO "user" (fullname, email, "password", is_admin) VALUES ($1, $2, $3, $4) RETURNING *', [fullname, email, new_password, false]);
 });
 
 // Route connexion user
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(email, password);
+        
         const findUser = 'SELECT email, password FROM "user" WHERE email= $1 ';
-        const { rows } = await pool.query(findUser,[email]);
+        const { rows } = await pool.query(findUser, [email]);
+        
         if (rows.length === 0) {
-            return res.send("Utilisateur non trouvé");
+            res.json("Utilisateur non trouvé");
+            return;
+            //return res.send("Utilisateur non trouvé");
         }
-        const user = rows[0];
 
-        const validPassword = await bcrypt.compare(mdp, user.password);
+        const user = rows[0];
+        console.log(user);
+        
+        
+        const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-           return res.send("Mot de passe incorrect");
+            res.json({connected: false});
+            return;
+            // res.send("Mot de passe incorrect")
+            //return res.send("Mot de passe incorrect");
         }
-        res.send("Connexion réussie");
+        res.json({connected: true});
+        //res.send("Connexion réussie");
     } catch (e) {
         console.error('Erreur serveur interne', e.message);
         res.status(500).json({error: 'Erreur interne du serveur'})
