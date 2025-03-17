@@ -1,25 +1,20 @@
-// Lorsque vous récupérer ce code, n'oubliez pas de npm install dans votre terminal pour récuperer tous les modules installer ci dessous.
-const express = require('express');
-const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const createAccount = require('./routes/save_user');
-const productRoutes = require('./routes/display_products');
-const pool = require('./connect_db.js');
-require('dotenv').config(); // J'importe DOTENV pour pourvoir créer des variable d'environement
-const basket = require('./routes/basket');
-const searchBar = require('./routes/search_bar');
+import express from 'express';
+import cors from 'cors';
 
 const app = express();
 const port = process.env.PORT;
 
-
+import { login } from './routes/login.js';
+import { product } from './routes/products.js';
+import { cart } from './routes/cart.js';
+import { searchBar } from './routes/search_bar.js';
 
 app.use(cors());
 app.use(express.json());
 
-app.use(createAccount);
-app.use(productRoutes);
-app.use(basket);
+app.use(login);
+app.use(product);
+app.use(cart);
 app.use(searchBar);
 
 app.listen(port, async () => {

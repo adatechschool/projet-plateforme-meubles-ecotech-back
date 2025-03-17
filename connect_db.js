@@ -1,5 +1,7 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+import pkg from 'pg';
+const { Pool } = pkg;
+import dotenv from 'dotenv';
+dotenv.config();
 
 //connection a la base de donnée
 const pool = new Pool({
@@ -9,4 +11,4 @@ const pool = new Pool({
     },
 });
 
-module.exports = pool;
+export default pool;

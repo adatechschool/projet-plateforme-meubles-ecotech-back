@@ -1,7 +1,7 @@
-const bcrypt = require('bcryptjs');
-const express = require('express');
+import bcrypt from 'bcryptjs';
+import express from 'express';
+import pool from '../connect_db.js';
 const router = express.Router();
-const pool = require('../connect_db');
 
 //chiffré le mot de passe dans la base de donnée
 async function hashedPassword(password) {
@@ -53,5 +53,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-module.exports = hashedPassword;
-module.exports = router;
+export { router as login };

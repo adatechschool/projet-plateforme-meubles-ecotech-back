@@ -1,10 +1,9 @@
-const express = require('express');
+import express from 'express';
+import pool from '../connect_db.js';
 const router = express.Router();
-const pool = require('../connect_db');
-
 
 // Route pour récupérer le panier d'un utilisateur 
-router.get('/basket/:id', async (req, res) => {
+router.get('/cart/:id', async (req, res) => {
     try {
         const basketId = req.params.id; // récupérer le paramètre id dans l'url. req = request
         const result = await pool.query(`SELECT * from basket_item WHERE basket_id = $1`, [basketId]); // Requête SQL
@@ -15,7 +14,7 @@ router.get('/basket/:id', async (req, res) => {
     }
 });
 
-router.post('/basket/:id/add', async(req, res)=>{
+router.post('/cart/:id/add', async(req, res)=>{
     try{
         const basketId = req.params.id;
         const { product_id, quantity, price} = req.body;
@@ -42,4 +41,4 @@ router.post('/basket/:id/add', async(req, res)=>{
 });
 
 
-module.exports = router
+export { router as cart };

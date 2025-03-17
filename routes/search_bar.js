@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
+import pool from '../connect_db.js';
 const router = express.Router();
-const pool = require('../connect_db');
 
 router.get('/search', async (req, res) => {     //fonction pour la bar de recherche
     try {
@@ -29,4 +29,4 @@ router.get('/search', async (req, res) => {     //fonction pour la bar de recher
     }
 });
 
-module.exports = router;
+export { router as searchBar };
