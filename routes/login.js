@@ -7,7 +7,6 @@ import pool from "../connect_db.js"; // Connexion à la base de données Postgre
 
 dotenv.config({ path: "./.env" }); //  Charge le fichier .env qui contient des variables comme la clé secrète du JWT.
 console.log("Toutes les variables d'environnement :");
-console.log(process.env); // te permet de montrer l'ensable des variable dans ton terminale
 
 // console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
@@ -124,7 +123,7 @@ router.get("/profile", verifyToken, (req, res) => {
 
 // **Route pour admin uniquement**
 router.get("/admin", verifyToken, (req, res) => {
-  if (!req.user.r.is_admin === "true") {
+  if (!req.user.r.is_admin === "false") {
     return res
       .status(403)
       .json({ message: "Accès refusé, vous n'êtes pas admin !" });
