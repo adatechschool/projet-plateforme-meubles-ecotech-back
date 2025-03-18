@@ -14,7 +14,7 @@ router.get('/search', async (req, res) => {     //fonction pour la bar de recher
         //requete SQL pour chercher le produit soit par methode leveshtein pour ne pas trop pénaliser les fautes de frappes soit en cherchant le bout de mot écrit dans la bar de recherche dans les noms des produits
         const result = await pool.query(
             `SELECT *, levenshtein(lower(title), lower($1)) AS distance
-             FROM product
+             FROM products
              WHERE title ILIKE $2
              OR levenshtein(lower(title), lower($1)) <= 3
              ORDER BY distance ASC`,
