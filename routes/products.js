@@ -30,6 +30,7 @@ router.get('/products/category', async (req, res) => {
         const filtre = parseInt(req.query.id);
         if (filtre) {
             const result = await pool.query('SELECT * FROM categories WHERE id = $1', [filtre]);
+            
             res.json(result.rows);
         } else {
             const result = await pool.query("SELECT * FROM categories");
@@ -65,6 +66,24 @@ router.get('/products/brand', async (req, res) => {
     }
 });
 
+router.post('/add', async (req, res) => {
+    try {
+        const {category, nom, url, description} = req.body;
+
+        const query = `INSERT INTO products 
+                       (title, description, price, category_id, img)
+                       VALUES (?,?,?)`;
+        const { rows } = pool.query(query, [nom, description, prix, category, url]);
+
+        if (rows.length === 0) {
+            res.json({add: false})
+        }
+
+        res.json({add: true});
+    } catch (error) {
+        console.error(error)
+    }
+});
 // router.get('/products/brand', async (req, res) => {
 //     try {
 //         const result = await pool.query("SELECT * FROM brands");
