@@ -17,7 +17,8 @@ router.get('/search', async (req, res) => {     //fonction pour la bar de recher
              FROM products
              WHERE title ILIKE $2
              OR levenshtein(lower(title), lower($1)) <= 3
-             ORDER BY distance ASC`,
+             ORDER BY distance ASC
+             LIMIT 4`,
             [searchTerm, `%${searchTerm}%`]
         );
         //levenshtein ne peut pas comparer un bout de mot a un mot entier donc on utilise les 2 methodes pour optimiser la recherche
