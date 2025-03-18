@@ -90,6 +90,7 @@ router.post("/login", async (req, res) => {
 
     const user = rows[0];
     console.log(user);
+    res.json({connected: true})
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {

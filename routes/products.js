@@ -68,13 +68,13 @@ router.get('/products/brand', async (req, res) => {
 
 router.post('/add', async (req, res) => {
     try {
-        const {category, nom, url, description, price} = req.body;
-        console.log(category, nom, url, description, price);
+        const {category, name, url, description, price} = req.body;
+        console.log(category, name, url, description, price);
         
         const query = `INSERT INTO products 
                        (title, description, price, category_id, img)
                        VALUES ($1,$2,$3,$4,$5)`;
-        const { rows } = pool.query(query, [nom, description, price, category, url]);
+        const { rows } =  await pool.query(query, [name, description, price, category, url]);
 
         res.json({add: true});
     } catch (error) {
