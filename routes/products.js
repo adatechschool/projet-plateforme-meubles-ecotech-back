@@ -5,38 +5,40 @@ const router = express.Router();
 //fonction pour récupérer toutes les informations de tous les produits dans la base de donnée
 router.get('/products', async (req, res) => {
     try {
+        let query;
         const filtre = parseInt(req.query.category);
         const productId = parseInt(req.query.id);
         if (filtre) {
-            const result = await pool.query('SELECT * FROM products WHERE category_id = $1', [filtre]);
+            query = "SELECT * FROM products WHERE category_id = $1";
+            const result = await pool.query(query, [filtre]);
             res.json(result.rows);
         } else if (productId) {
-            const result = await pool.query(
-                `SELECT * FROM products WHERE id = $1`, [productId]);
-                res.json(result.rows);
+            query = "SELECT * FROM products WHERE id = $1";
+            const result = await pool.query(query, [productId]);
+            res.json(result.rows);
         } else {
-            const result = await pool.query('SELECT * FROM products');
+            query = "SELECT * FROM products";
+            const result = await pool.query(query);
             res.json(result.rows);
         }
-        
     } catch (error) {
-        console.error("Database error:", error);
+        console.error(`Database error:, ${error.message}`);
         res.status(500).json({ message: "Error fetching products" });
     }
 });
 
 router.get('/products/category', async (req, res) => {
     try {
+        let query;
         const filtre = parseInt(req.query.id);
         if (filtre) {
-            const result = await pool.query('SELECT * FROM categories WHERE id = $1', [filtre]);
-            
+            query = "SELECT * FROM categories WHERE id = $1";
+            const result = await pool.query(query, [filtre]);
             res.json(result.rows);
         } else {
             const result = await pool.query("SELECT * FROM categories");
             res.json(result.rows);
         }
-        
     } catch (error) {
         console.error(`Database error : ${error}`);
         res.status(500).json({ message: "Error fetching products"});
@@ -49,9 +51,9 @@ router.get('/products/brand', async (req, res) => {
         //brandId est récupéré dans la bar de recherche
         const brandId = parseInt(req.query.id, 10);
         if (brandId) {
-            if (isNaN(brandId) || brandId < 1 || brandId > 10)
+            if (isNaN(brandId) || brandId < 1 || brandId > 10) {
                 return res.status(400).json({ message: "Invalid brand ID. It must be between 1 and 10." });
-    
+            }
             const result = await pool.query('SELECT * FROM products WHERE brand_id = $1', [brandId]);
             res.json(result.rows);
         } else {
@@ -59,7 +61,6 @@ router.get('/products/brand', async (req, res) => {
             res.json(result.rows);  
         }
         //les id des marque dans la base de donnée se situent entre 1 et 10 inclus
-        
     } catch (error) {
         console.error("Database error:", error);
         res.status(500).json({ message: "Error fetching products" });
@@ -69,18 +70,18 @@ router.get('/products/brand', async (req, res) => {
 router.post('/add', async (req, res) => {
     try {
         const {category, name, url, description, price} = req.body;
-        console.log(category, name, url, description, price);
-        
         const query = `INSERT INTO products 
                        (title, description, price, category_id, img)
                        VALUES ($1,$2,$3,$4,$5)`;
         const { rows } =  await pool.query(query, [name, description, price, category, url]);
-
-        res.json({add: true});
+        res.json({added: true});
+        
     } catch (error) {
-        console.error(error)
+        console.error(`Error adding products ${error.message}`);
+        res.status(500).json({ message: "Error fetching products" });
     }
 });
+
 // router.get('/products/brand', async (req, res) => {
 //     try {
 //         const result = await pool.query("SELECT * FROM brands");

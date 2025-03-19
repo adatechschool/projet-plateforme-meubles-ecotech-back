@@ -90,7 +90,7 @@ router.post("/login", async (req, res) => {
 
     const user = rows[0];
     console.log(user);
-    res.json({connected: true})
+    //res.json({connected: true})
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
@@ -109,30 +109,28 @@ router.post("/login", async (req, res) => {
       maxAge: 3600000, // Expire en 1h
     });
 
-    res.json({ connected: true });
+    //es.json({ connected: true });
     //res.send("Connexion réussie");
   } catch (e) {
     console.error("Erreur serveur interne", e.message);
     res.status(500).json({ error: "Erreur interne du serveur" });
   }
 });
-// **Route pour récupérer les infos de l'utilisateur**
+
 router.get("/profile", verifyToken, (req, res) => {
   res.json({ user: req.user });
-  console.log("Utilisateur connecté :", req.user);
+  //console.log("Utilisateur connecté :", req.user);
 });
 
-// **Route pour admin uniquement**
+
 router.get("/admin", verifyToken, (req, res) => {
+
   if (!req.user.r.is_admin === "true") {
-    return res
-      .status(403)
-      .json({ message: "Accès refusé, vous n'êtes pas admin !" });
+    return res.json({ message: "Accès refusé, vous n'êtes pas admin !" });
   }
   res.json({ message: "Bienvenue Admin !" });
-  console.log(
-    "vous etes bien l'admine et vous avez le droit d'acceder a la page admin"
-  );
+  console.log("vous etes bien l'admine et vous avez le droit d'acceder a la page admin");
+
 });
 
 export { router as login };
