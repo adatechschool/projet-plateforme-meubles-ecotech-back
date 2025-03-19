@@ -13,4 +13,16 @@ router.get('/user', async (req, res) => {
     }
 });
 
+router.post('/user/remove/',async(req,res)=>{
+    try{  
+        const {id} = req.body;
+        const sql = `delete from "user" where id = $1`;
+        await pool.query(sql, [id]);
+        res.json({erased: true})
+    }catch(error){
+        console.error(error)
+    }
+});
+
+
 export { router as user };
